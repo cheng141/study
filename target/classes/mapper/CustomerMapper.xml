@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 放就是接口名称 -->
+<mapper namespace="com.wisezone.mapper.CustomerMapper">
+ 
+
+	<!-- 多条件查询固定写法 -->
+	<sql id="Example_Where_Clause">
+		<where>
+			<trim prefix="(" prefixOverrides="and" suffix=")">
+				<foreach collection="searchCriterion" item="a">
+					and
+					${a.columnName} ${a.condition.name} #{a.value}
+				</foreach>
+			</trim>
+		</where>
+	</sql>
+
+	<!-- 多条件查询 List<T> search(SearchParameter searchParameter); -->
+	<select id="search"
+		parameterType="com.wisezone.util.mybatis.SearchParameter"
+		resultType="com.wisezone.entity.Customer">
+		SELECT c.cusId,  c.cusName,c.cusNo,c.head,
+			c.areaId,b.regionName,c.typeId,cl.`name` as levelName,
+			c.credit,c.fullness,c.address,c.zip,c.tel,c.fax,c.web,c.state
+		FROM  
+			customer AS c
+			INNER JOIN base_region AS b ON c.areaId = b.regionId
+			INNER JOIN base_customerlevel AS cl ON c.typeId = cl.id
+
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+
+	<!-- id就是com.wisezone.mapper.RoleMapper接口的新增方法名称 -->
+	<insert id="insert" parameterType="com.wisezone.entity.Customer">
+		insert into customer (cusId, cusName, cusNo,
+		head, areaId, typeId,
+		credit, fullness, address,
+		zip, tel, fax, web,
+		`state`)
+		values (#{cusId,jdbcType=INTEGER}, #{cusName,jdbcType=VARCHAR},
+		#{cusNo,jdbcType=VARCHAR},
+		#{head,jdbcType=VARCHAR}, #{areaId,jdbcType=INTEGER}, #{typeId,jdbcType=INTEGER},
+		#{credit,jdbcType=INTEGER}, #{fullness,jdbcType=INTEGER},
+		#{address,jdbcType=VARCHAR},
+		#{zip,jdbcType=INTEGER}, #{tel,jdbcType=VARCHAR}, #{fax,jdbcType=VARCHAR},
+		#{web,jdbcType=VARCHAR},
+		#{state,jdbcType=INTEGER})
+	</insert>
+
+
+	<select id="findOne" parameterType="int"
+		resultType="com.wisezone.entity.Customer">
+		SELECT c.cusId,  c.cusName,c.cusNo,c.head,
+			c.areaId,b.regionName,c.typeId,cl.`name` as levelName,
+			c.credit,c.fullness,c.address,c.zip,c.tel,c.fax,c.web,c.state
+		FROM  
+			customer AS c
+			INNER JOIN base_region AS b ON c.areaId = b.regionId
+			INNER JOIN base_customerlevel AS cl ON c.typeId = cl.id
+		where c.cusId=#{id}
+	</select>
+
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.wisezone.entity.Customer">
+		update customer
+		<set>
+			<if test="cusName != null">
+				cusName = #{cusName,jdbcType=VARCHAR},
+			</if>
+			<if test="cusNo != null">
+				cusNo = #{cusNo,jdbcType=VARCHAR},
+			</if>
+			<if test="head != null">
+				head = #{head,jdbcType=VARCHAR},
+			</if>
+			<if test="areaId != null">
+				areaId = #{areaId,jdbcType=INTEGER},
+			</if>
+			<if test="typeId != null">
+				typeId = #{typeId,jdbcType=INTEGER},
+			</if>
+			<if test="credit != null">
+				credit = #{credit,jdbcType=INTEGER},
+			</if>
+			<if test="fullness != null">
+				fullness = #{fullness,jdbcType=INTEGER},
+			</if>
+			<if test="address != null">
+				address = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="zip != null">
+				zip = #{zip,jdbcType=INTEGER},
+			</if>
+			<if test="tel != null">
+				tel = #{tel,jdbcType=VARCHAR},
+			</if>
+			<if test="fax != null">
+				fax = #{fax,jdbcType=VARCHAR},
+			</if>
+			<if test="web != null">
+				web = #{web,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				`state` = #{state,jdbcType=INTEGER},
+			</if>
+		</set>
+		where cusId = #{cusId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.wisezone.entity.Customer">
+		update customer
+		set cusName = #{cusName,jdbcType=VARCHAR},
+		cusNo = #{cusNo,jdbcType=VARCHAR},
+		head = #{head,jdbcType=VARCHAR},
+		areaId = #{areaId,jdbcType=INTEGER},
+		typeId = #{typeId,jdbcType=INTEGER},
+		credit = #{credit,jdbcType=INTEGER},
+		fullness = #{fullness,jdbcType=INTEGER},
+		address = #{address,jdbcType=VARCHAR},
+		zip = #{zip,jdbcType=INTEGER},
+		tel = #{tel,jdbcType=VARCHAR},
+		fax = #{fax,jdbcType=VARCHAR},
+		web = #{web,jdbcType=VARCHAR},
+		`state` = #{state,jdbcType=INTEGER}
+		where cusId = #{cusId,jdbcType=INTEGER}
+	</update>
+</mapper>

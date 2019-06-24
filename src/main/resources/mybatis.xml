@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+  
+<configuration>
+
+  <settings>
+     <setting name="logImpl" value="LOG4J"/>
+  </settings>
+  
+  
+  <!-- 放入分页插件 -->
+    <plugins>
+	    <plugin interceptor="com.github.pagehelper.PageInterceptor"> 
+		</plugin>
+	 </plugins>
+ 
+  <environments default="development">
+    <environment id="development">
+     <!-- 使用jdbc的事务 -->
+      <transactionManager type="JDBC"/>
+      <!-- 使用默认的数据库连接池 -->
+      <dataSource type="POOLED">
+        <property name="driver" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/crm"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123"/>
+      </dataSource>
+    </environment>
+  </environments>
+  
+  <!-- 把你的注解mapper 放到这里来 -->
+   <mappers>
+       <mapper resource="mapper/RoleMapper.xml"/> 
+       <mapper resource="mapper/UserMapper.xml"/> 
+       <mapper resource="mapper/RegionMapper.xml"/>
+       <mapper resource="mapper/CustomerLevelMapper.xml"/>
+       <mapper resource="mapper/CustomerMapper.xml"/>
+   </mappers>
+   
+   
+  
+ 
+</configuration>

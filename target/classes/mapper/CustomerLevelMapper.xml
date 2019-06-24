@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 放就是接口名称 -->
+<mapper namespace="com.wisezone.mapper.CustomerlevelMapper">
+
+	<!-- 多条件查询固定写法 -->
+	<sql id="Example_Where_Clause">
+		<where>
+			<trim prefix="(" prefixOverrides="and" suffix=")">
+				<foreach collection="searchCriterion" item="a">
+					and
+					${a.columnName} ${a.condition.name} #{a.value}
+				</foreach>
+			</trim>
+		</where>
+	</sql>
+
+	<!-- 多条件查询 List<T> search(SearchParameter searchParameter); -->
+	<select id="search"
+		parameterType="com.wisezone.util.mybatis.SearchParameter"
+		resultType="com.wisezone.entity.Customerlevel">
+		select *
+		from base_customerlevel
+
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+
+	<!-- id就是com.wisezone.mapper.RoleMapper接口的新增方法名称 -->
+	<insert id="insert"
+		parameterType="com.wisezone.entity.Customerlevel">
+		insert into base_customerlevel (id, `name`, `state`)
+		values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},
+		#{state,jdbcType=INTEGER})
+	</insert>
+
+
+	<select id="findOne" parameterType="int"
+		resultType="com.wisezone.entity.Customerlevel">
+		select *
+		from base_customerlevel
+		where id=#{id}
+	</select>
+
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.wisezone.entity.Customerlevel">
+		update base_customerlevel
+		<set>
+			<if test="name != null">
+				`name` = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				`state` = #{state,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.wisezone.entity.Customerlevel">
+		update base_customerlevel
+		set `name` = #{name,jdbcType=VARCHAR},
+		`state` = #{state,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>
